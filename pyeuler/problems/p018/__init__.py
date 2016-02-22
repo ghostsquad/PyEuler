@@ -49,25 +49,37 @@ def main(data_file):
             if len(line_array) >= 1:
                 triangle.append(line_array)
 
+    # what we want to accomplish, is a new triangle, that defines:
+    # below me, the highest sum you can get is X
+    # the way we do that is by starting at the bottom of the triangle,
+    # working our way up, and replacing numbers in rows with:
+    # x + max(c1, c2) where x is the current number, and cN are the two possible routes below it (children)
+    #
+    # # example work to be done
+    # 17 47 82
+    #  |\ |\ |\
+    # 18 35 87 10
+    # given the above triangle rows,
+    # starting on line 1, each number will have 2 children,
+    # p(17) has c(18) and c(35)
+    #
+    # the new parent row (17 47 82)
+    # would become
+    # 17 + max(18, 35) == 52
+    # 47 + max(35, 87) == 134
+    # 82 + max(87, 10) == 169
+    #
+    # 52 134 169
+    #  |\ |\ |\
+    # 18 35 87 10
+    #
+    # this essentially "caches" the sum of the best route below each number on a given row
+    #
     parents = []
     for idx, row in enumerate_reversed(triangle):
         # because we are enumerating the triangle from bottom to top,
         # we can stop looking for parents when we reach index 0
         if idx != 0:
-            # what we want to accomplish, is a new triangle, that defines:
-            # below me, the highest sum you can get is X
-            # the way we do that is by starting at the bottom of the triangle,
-            # working our way up, and replacing numbers in rows with:
-            # x + max(c1, c2) where x is the current number, and cN are the two possible routes below it (children)
-            #
-            # # example work to be done
-            # 17 47 82
-            #  |\ |\ |\
-            # 18 35 87 10
-            # given the above triangle rows,
-            # starting on line 1, each number will have 2 children,
-            # p(17) has c(18) and c(35)
-
             # we are enumerating starting at the bottom, therefore:
             parents = triangle[idx - 1]
             children = triangle[idx]
