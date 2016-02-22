@@ -40,35 +40,10 @@ def enumerate_reversed(enumerable):
         yield index, enumerable[index]
 
 
-def get_new_parents(children, parents=None):
-    # example work to be done
-    # 17 47 82
-    #  |\ |\ |\
-    # 18 35 87 10
-    # given the above triangle rows,
-    # starting on line 1, each number will have 2 children,
-    # p(17) has c(18) and c(35)
-    # etc
-
-    # after the relationships are created, I need to replace the parent row numbers with:
-    # p + max(c1, c2)
-
-    if parents is None:
-        return children
-
-    new_parents = []
-
-    for idx, value in parents:
-        new_value = value + max(children[idx], children[idx + 1])
-        new_parents.append(new_value)
-
-    return new_parents
-
-
-def main(data_path):
+def main(data_file):
     triangle = []
 
-    with open(data_path) as data:
+    with open(data_file) as data:
         for line in data:
             line_array = list(map(int, line.split()))
             if len(line_array) >= 1:
@@ -105,5 +80,5 @@ def main(data_path):
     print(answer)
 
 if __name__ == '__main__':
-    data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data')
-    main(data_path)
+    data_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data')
+    main(data_file)
