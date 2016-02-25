@@ -19,6 +19,7 @@ lib/
 lib64/
 parts/
 sdist/
+/pyeuler/problems/p546/log.txt
 var/
 *.egg-info/
 .installed.cfg
