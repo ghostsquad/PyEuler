@@ -16,6 +16,13 @@ memo_dict = {}
 
 depth = 0
 
+def floors_revenge_smart(k, n):
+    i = 1
+    result = 1
+    prev_fract = 0
+    prev_fract_result = 1
+    while i <= n:
+
 
 def floors_revenge(k, n):
     i = 0
