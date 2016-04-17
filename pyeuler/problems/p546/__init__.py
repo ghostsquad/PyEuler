@@ -20,29 +20,33 @@ depth = 0
 def floors_revenge(k, n):
     i = 0
     mult = 1
+    mult_xtra = 0
     result = 0
     while i <= n:
         print("---------------")
         i_start = i
         print('mult: {} k: {}'.format(mult, k))
-        extra = (mult - k) * k
-        extra_msg = 'extra: ({} - {k}) * {k} = {}'.format(mult, extra, k=k)
-        if extra < 0:
-            extra = 0
+        if mult > k:
+            mult_xtra += 1
+            print('mult_xtra: {}'.format(mult_xtra))
+        adj_mult = mult + mult_xtra
+        print('adj mult: {}'.format(adj_mult))
 
         if i == n:
+            adj_k = 0
             k = 1
-            print('adj k: {}'.format(k))
+            print('adj k: {}'.format(adj_k))
         elif i + k > n:
+            adj_k = n - i + 1
             k = n - i + 1
-            print('adj k: {}'.format(k))
+            print('adj k: {} because {i} + {k} > {n}'.format(adj_k, i=i, k=k, n=n))
+        else:
+            adj_k = 0
 
-        before_extra = k * mult
-        temp_sum = before_extra + extra
+        temp_sum = (k * adj_mult) + adj_k
         result += temp_sum
         i += k
-        print(extra_msg)
-        print('{}-{} = sum of {} + {} = {}'.format(i_start, i - 1, before_extra, extra, temp_sum))
+        print('{}-{} = sum of {}'.format(i_start, i - 1, temp_sum))
         print('result: {}'.format(result))
         mult += 1
 
@@ -64,8 +68,7 @@ def main():
     print('started ' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))
     run_case(5, 10, 18)
     run_case(7, 100, 1003)
-    run_case(2, 61, 264830889564)
-    # run_case(2, pow(10, 3))
+    run_case(2, pow(10, 3), 264830889564)
 
     # exit(0)
 
