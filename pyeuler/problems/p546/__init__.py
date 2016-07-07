@@ -8,43 +8,60 @@ For example, f5(10) = 18, f7(100) = 1003, and f2(103) = 264830889564.
 Find (∑10k=2(∑k=210 fk(1014))) mod (109+7).
 """
 import datetime
+import logging
 from assertpy import assert_that
-from sympy import *
 
-a, b, c, x, y = symbols('a b c x y')
-quadratic_equation_expr = Eq(a * x**2 + b * x + c - y)
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 
-
-def extract_parabolic_values(coords):
-    """
-    returns a tuple with values of (a, b, c)
-    from the equation: y = ax^2 + bx + c
-    :param coords:
-        example: [
-            1,1
-            2,4
-            3,10
-        ]
-    :return: 3-tuple
-    """
-    exprs = []
-    for coor in coords:
-        expr = quadratic_equation_expr.subs([(x, coor[0]), (y, coor[1])])
-        exprs.append(expr)
-
-    return solve(exprs, [a, b, c])
+log = logging.getLogger(__name__)
 
 
-def solve_for_y(k, x_val):
-    if k == 2:
-        av, bv, cv = Rational(3, 2), Rational(-3, 2), 1
-    elif k % 2 == 0:
-        av, bv, cv = k/2, -(k-1), 0
-    else:
-        av, bv, cv = Rational(k, 2), Rational(-(k-2)/2), 0
+class Revenger(object):
+    def __init__(self, k):
+        self.log = logging.getLogger(self.__class__.__name__)
+        self.k = k
+        self.iteration = 0
+        self.result = 0
+        self.next_result = 0
+        self.incr_list = [k, 1]
 
-    expr = quadratic_equation_expr.subs([(x, x_val), (a, av), (b, bv), (c, cv)])
-    return solve(expr)[0]
+    def next_result(self, prev_result, incr):
+        return incr * self.k + prev_result
+
+    def next(self):
+        self.iteration += 1
+        self.log.info('iteration: %s', self.iteration)
+
+        self.log.info('list before: %s', self.incr_list)
+
+        if self.iteration % self.k == 0:
+            self.log.debug('iteration %s is evenly divisable by %s', self.iteration, self.k)
+            if self.incr_list[-1] % 5 == 0:
+                self.incr_list.append(1)
+
+        for idx in reversed(range(len(self.incr_list))):
+            if idx + 1 == len(self.incr_list):
+                incr_by = 1
+            else:
+                incr_by = self.incr_list[idx + 1]
+
+            if idx == 0:
+                break
+
+            self.log.debug('incrementing idx: %s of value %s by %s',
+                           idx,
+                           self.incr_list[idx],
+                           incr_by)
+
+            self.incr_list[idx] += incr_by
+
+        self.incr_list[0] += (self.incr_list[1] * self.k)
+
+        self.log.info('list after: %s', self.incr_list)
+
+        return self.incr_list[0]
 
 
 def floors_revenge(k, n):
@@ -95,7 +112,6 @@ def run_case(k, n, expected_result):
 
 
 def main():
-
     print('started ' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))
     run_case(5, 10, 18)
     run_case(7, 100, 1003)
@@ -115,6 +131,7 @@ def main():
     print('answer: ' + str(answer))
     print('done ' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))
     print('============================================')
+
 
 if __name__ == '__main__':
     main()
